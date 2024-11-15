@@ -12,18 +12,11 @@ final class ToDoListVC: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    private var backButton: UIBarButtonItem {
-        let backButton = UIBarButtonItem()
-        backButton.title = "Назад"
-        navigationItem.backBarButtonItem = backButton
-        return backButton
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsViewController()
-
+        setupBackButton()
     }
 
     private func settingsViewController() {

@@ -14,7 +14,7 @@
 		E79872C62CE79D3300EED6CB /* Exceptions for "ToDo List" folder in "ToDo List" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = E79872B32CE79D3200EED6CB /* ToDo List */;
 		};

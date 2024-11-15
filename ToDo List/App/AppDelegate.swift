@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         todoListVC.router = router
         
         let navigationController = UINavigationController(rootViewController: todoListVC)
-        navigationController.navigationBar.tintColor = .white
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
