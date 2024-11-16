@@ -2,6 +2,7 @@ import UIKit
 
 final class ToDoCell: UITableViewCell {
     static let reuseIdentifier = "ToDoCellReuseIdentifier"
+    private var isCompleted: Bool = false
     
     private lazy var taskProgressButton: UIButton = {
         let button = UIButton()
@@ -10,9 +11,7 @@ final class ToDoCell: UITableViewCell {
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.strokeCustom.cgColor
-        
         button.addTarget(self, action: #selector(taskProgressButtonTapped), for: .touchUpInside)
-        
         return button
     }()
     
@@ -32,27 +31,24 @@ final class ToDoCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .whiteCustom
-        label.text = "Почитать книгу"
         return label
     }()
     
-    private lazy var taskDescriptionLabel: UILabel = {
+    private lazy var taskTodoLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.numberOfLines = 2
         label.textColor = .whiteCustom
-        label.text = "Составить список необходимых продуктов для ужина. Не забыть проверить, что уже есть в холодильнике."
         return label
     }()
     
-    private lazy var dateLabel: UILabel = {
+    private lazy var dateOfCreationLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .whiteCustom
         label.alpha = 0.5
-        label.text = "09/10/24"
         return label
     }()
     
@@ -74,8 +70,8 @@ final class ToDoCell: UITableViewCell {
         contentView.addSubview(taskProgressButton)
         taskProgressButton.addSubview(taskProgressImageView)
         contentView.addSubview(taskTitleLabel)
-        contentView.addSubview(taskDescriptionLabel)
-        contentView.addSubview(dateLabel)
+        contentView.addSubview(taskTodoLabel)
+        contentView.addSubview(dateOfCreationLabel)
         
         
         NSLayoutConstraint.activate([
@@ -94,45 +90,37 @@ final class ToDoCell: UITableViewCell {
             taskTitleLabel.leadingAnchor.constraint(equalTo: taskProgressButton.trailingAnchor, constant: 8),
             taskTitleLabel.centerYAnchor.constraint(equalTo: taskProgressButton.centerYAnchor),
             
-            taskDescriptionLabel.topAnchor.constraint(equalTo: taskProgressButton.bottomAnchor, constant: 6),
-            taskDescriptionLabel.leadingAnchor.constraint(equalTo: taskProgressButton.trailingAnchor, constant: 8),
-            taskDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            taskTodoLabel.topAnchor.constraint(equalTo: taskProgressButton.bottomAnchor, constant: 6),
+            taskTodoLabel.leadingAnchor.constraint(equalTo: taskProgressButton.trailingAnchor, constant: 8),
+            taskTodoLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            dateLabel.topAnchor.constraint(equalTo: taskDescriptionLabel.bottomAnchor, constant: 6),
-            dateLabel.leadingAnchor.constraint(equalTo: taskProgressButton.trailingAnchor, constant: 8)
+            dateOfCreationLabel.topAnchor.constraint(equalTo: taskTodoLabel.bottomAnchor, constant: 6),
+            dateOfCreationLabel.leadingAnchor.constraint(equalTo: taskProgressButton.trailingAnchor, constant: 8)
         ])
         
     }
     
     private func updateTaskProgressButtonAppearance() {
-        if taskProgressButton.layer.borderColor == UIColor.yellowCustom.cgColor {
-            taskProgressButton.layer.borderColor = UIColor.strokeCustom.cgColor
-            taskProgressImageView.isHidden = true
-            
-            let nonStrikethroughText = NSAttributedString(
-                string: taskTitleLabel.text ?? "",
-                attributes: [
-                    .font: UIFont.systemFont(ofSize: 16, weight: .medium)
-                ]
-            )
-            taskTitleLabel.attributedText = nonStrikethroughText
-            taskTitleLabel.alpha = 1
-            taskDescriptionLabel.alpha = 1
-        } else {
-            taskProgressButton.layer.borderColor = UIColor.yellowCustom.cgColor
-            taskProgressImageView.isHidden = false
-            
-            let strikethroughText = NSAttributedString(
-                string: taskTitleLabel.text ?? "",
-                attributes: [
-                    .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                    .font: UIFont.systemFont(ofSize: 16, weight: .medium)
-                ]
-            )
-            taskTitleLabel.attributedText = strikethroughText
-            taskTitleLabel.alpha = 0.5
-            taskDescriptionLabel.alpha = 0.5
-        }
+        isCompleted.toggle()
+        setTaskAppearance(isCompleted: isCompleted)
+    }
+    
+    private func setTaskAppearance(isCompleted: Bool) {
+        taskProgressButton.layer.borderColor = isCompleted ? UIColor.yellowCustom.cgColor : UIColor.strokeCustom.cgColor
+        taskProgressImageView.isHidden = !isCompleted
+        
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+            .strikethroughStyle: isCompleted ? NSUnderlineStyle.single.rawValue : 0
+        ]
+        
+        taskTitleLabel.attributedText = NSAttributedString(
+            string: taskTitleLabel.text ?? "",
+            attributes: textAttributes
+        )
+        
+        taskTitleLabel.alpha = isCompleted ? 0.5 : 1.0
+        taskTodoLabel.alpha = isCompleted ? 0.5 : 1.0
     }
     
     @objc private func taskProgressButtonTapped() {
@@ -140,6 +128,10 @@ final class ToDoCell: UITableViewCell {
     }
     
     func configureCell(with task: TaskModel) {
-        
+        taskTitleLabel.text = task.title
+        taskTodoLabel.text = task.todo
+        dateOfCreationLabel.text = task.dateOfCreation
+        isCompleted = task.completed
+        setTaskAppearance(isCompleted: isCompleted)
     }
 }
