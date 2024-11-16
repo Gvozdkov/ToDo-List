@@ -1,8 +1,8 @@
 import UIKit
 
 final class ToDoListVC: UIViewController {
-    
     var router: ToDoListRouterProtocol?
+    var presenter: ToDoListPresenter?
     
     private lazy var tasksLabel: UILabel = {
         let label = UILabel()
@@ -60,6 +60,12 @@ final class ToDoListVC: UIViewController {
         super.viewDidLoad()
         constraintsViewController()
         setupBackButton()
+        tasksTable.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tasksTable.reloadData()
     }
 
     private func constraintsViewController() {
@@ -84,8 +90,7 @@ final class ToDoListVC: UIViewController {
             tasksTable.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
             tasksTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tasksTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            tasksTable.bottomAnchor.constraint(equalTo: searchBar.safeAreaLayoutGuide.bottomAnchor),
-            tasksTable.heightAnchor.constraint(equalToConstant: 800),
+            tasksTable.bottomAnchor.constraint(equalTo: tabBarView.topAnchor),
             
             tabBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -109,12 +114,15 @@ final class ToDoListVC: UIViewController {
 
 extension ToDoListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        return presenter?.getTasks().count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
-
+            cell.selectionStyle = .none
+            if let task = presenter?.getTasks()[indexPath.row] {
+                cell.configureCell(with: task)
+            }
             return cell
         } else {
             assertionFailure("Error - ScheduleCastomCell")
