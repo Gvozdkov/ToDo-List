@@ -24,6 +24,8 @@ final class ToDoListVC: UIViewController {
     private lazy var tasksTable: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(ToDoCell.self, forCellReuseIdentifier: ToDoCell.reuseIdentifier)
+        tableView.dataSource = self
         return tableView
     }()
     
@@ -47,10 +49,10 @@ final class ToDoListVC: UIViewController {
         let image = UIImage(named: "createTask")
         
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.clipsToBounds = true
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(addTaskButtonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -103,4 +105,22 @@ final class ToDoListVC: UIViewController {
     @objc private func addTaskButtonTapped() {
         router?.navigateToAddTask()
     }
+}
+
+extension ToDoListVC: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
+
+            return cell
+        } else {
+            assertionFailure("Error - ScheduleCastomCell")
+            return UITableViewCell()
+        }
+    }
+    
+    
 }
