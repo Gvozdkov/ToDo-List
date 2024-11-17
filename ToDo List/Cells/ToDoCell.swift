@@ -54,6 +54,7 @@ final class ToDoCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupCellAppearance()
         constraintsCell()
     }
     
@@ -66,13 +67,19 @@ final class ToDoCell: UITableViewCell {
         super.prepareForReuse()
     }
     
+    private func setupCellAppearance() {
+        selectionStyle = .none
+        clipsToBounds = true
+        layer.cornerRadius = 12
+        backgroundColor = .blackCustom
+    }
+    
     private func constraintsCell() {
         contentView.addSubview(taskProgressButton)
         taskProgressButton.addSubview(taskProgressImageView)
         contentView.addSubview(taskTitleLabel)
         contentView.addSubview(taskTodoLabel)
         contentView.addSubview(dateOfCreationLabel)
-        
         
         NSLayoutConstraint.activate([
             contentView.heightAnchor.constraint(equalToConstant: 108),

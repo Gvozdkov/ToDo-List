@@ -8,7 +8,7 @@ final class ToDoListVC: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        label.textColor = .white
+        label.textColor = .whiteCustom
         label.text = "Задачи"
         return label
     }()
@@ -17,13 +17,29 @@ final class ToDoListVC: UIViewController {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.backgroundImage = UIImage()
-        searchBar.placeholder = "Search"
+
+        let textField = searchBar.searchTextField
+        textField.textColor = .whiteCustom
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Search",
+            attributes: [.foregroundColor: UIColor.whiteCustom.withAlphaComponent(0.5)]
+        )
+        
+        textField.backgroundColor = UIColor.grayCustom
+
+        if let leftView = textField.leftView as? UIImageView {
+            leftView.tintColor = .whiteCustom.withAlphaComponent(0.5)
+        }
+
         return searchBar
     }()
     
     private lazy var tasksTable: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .blackCustom
+        tableView.separatorColor = UIColor.whiteCustom
+        tableView.separatorInset = .zero
         tableView.register(ToDoCell.self, forCellReuseIdentifier: ToDoCell.reuseIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
@@ -41,7 +57,7 @@ final class ToDoListVC: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 11, weight: .regular)
-        label.textColor = .white
+        label.textColor = .whiteCustom
         label.text = "7 задач"
         return label
     }()
@@ -65,7 +81,7 @@ final class ToDoListVC: UIViewController {
     }
     
     private func constraintsViewController() {
-        view.backgroundColor = .black
+        view.backgroundColor = .blackCustom
         
         view.addSubview(tasksLabel)
         view.addSubview(searchBar)
@@ -82,6 +98,7 @@ final class ToDoListVC: UIViewController {
             searchBar.topAnchor.constraint(equalTo: tasksLabel.bottomAnchor, constant: 10),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            searchBar.heightAnchor.constraint(equalToConstant: 36),
             
             tasksTable.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
             tasksTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -115,9 +132,6 @@ extension ToDoListVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
-            cell.selectionStyle = .none
-            cell.clipsToBounds = true
-            cell.layer.cornerRadius = 12
             if let task = presenter?.getTasks()[indexPath.row] {
                 cell.configureCell(with: task)
             }
