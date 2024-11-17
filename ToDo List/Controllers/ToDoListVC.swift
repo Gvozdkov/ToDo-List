@@ -26,6 +26,7 @@ final class ToDoListVC: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ToDoCell.self, forCellReuseIdentifier: ToDoCell.reuseIdentifier)
         tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }()
     
@@ -55,7 +56,7 @@ final class ToDoListVC: UIViewController {
         button.addTarget(self, action: #selector(addTaskButtonTapped), for: .touchUpInside)
         return button
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         constraintsViewController()
@@ -63,11 +64,6 @@ final class ToDoListVC: UIViewController {
         tasksTable.reloadData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tasksTable.reloadData()
-    }
-
     private func constraintsViewController() {
         view.backgroundColor = .black
         
@@ -120,6 +116,8 @@ extension ToDoListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
             cell.selectionStyle = .none
+            cell.clipsToBounds = true
+            cell.layer.cornerRadius = 12
             if let task = presenter?.getTasks()[indexPath.row] {
                 cell.configureCell(with: task)
             }
@@ -129,6 +127,29 @@ extension ToDoListVC: UITableViewDataSource {
             return UITableViewCell()
         }
     }
-    
-    
+}
+
+extension ToDoListVC: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let editImage = UIImage(named: "edit")?.withTintColor(.blackCustom)
+            let shareImage = UIImage(named: "export")?.withTintColor(.blackCustom)
+            let deleteImage = UIImage(named: "trash")?.withTintColor(.redCustom)
+            
+            let editAction = UIAction(title: "Редактировать", image: editImage) { _ in
+                self.presenter?.editTask()
+            }
+            
+            let shareAction = UIAction(title: "Поделиться", image: shareImage) { _ in
+                self.presenter?.shareTask()
+            }
+            
+            let deleteAction = UIAction(title: "Удалить", image: deleteImage, attributes: .destructive) { _ in
+                self.presenter?.deleteTask()
+            }
+            
+            return UIMenu(title: "", children: [editAction, shareAction, deleteAction])
+        }
+    }
 }

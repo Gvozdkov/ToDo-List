@@ -2,6 +2,9 @@ import Foundation
 
 protocol ToDoListInteractorProtocol {
     func fetchTasks() -> [TaskModel]
+    func editTask()
+    func shareTask()
+    func deleteTask()
 }
 
 final class ToDoListInteractor: ToDoListInteractorProtocol {
@@ -12,5 +15,17 @@ final class ToDoListInteractor: ToDoListInteractorProtocol {
     
     func fetchTasks() -> [TaskModel] {
         return tasks
+    }
+    
+    func editTask() {
+        print("editTask")
+    }
+    
+    func shareTask() {
+        print("shareTask")
+    }
+    
+    func deleteTask() {
+        print("deleteTask")
     }
 }
