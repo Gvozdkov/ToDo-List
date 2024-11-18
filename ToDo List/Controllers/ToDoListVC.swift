@@ -131,7 +131,7 @@ final class ToDoListVC: UIViewController {
     }
     
     private func updateTextNumberOfTasksLabel() {
-        let text = presenter?.requesTextCountTasks() ?? ""
+        let text = presenter?.requestTextCountTasks() ?? ""
         numberOfTasksLabel.text = text
     }
     
@@ -146,7 +146,6 @@ final class ToDoListVC: UIViewController {
 
 extension ToDoListVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("Пользователь ввёл: \(searchText)")
         presenter?.requestTaskSearch(search: searchText)
         tasksTable.reloadData()
     }
@@ -161,7 +160,8 @@ extension ToDoListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
             if let task = presenter?.getSerchTasks()[indexPath.row] {
-                cell.configureCell(with: task)
+                cell.configureCell(task: task)
+                cell.delegate = self
             }
             return cell
         } else {
@@ -193,5 +193,13 @@ extension ToDoListVC: UITableViewDelegate {
             
             return UIMenu(title: "", children: [editAction, shareAction, deleteAction])
         }
+    }
+}
+
+extension ToDoListVC: ToDoCellDelegate {
+    func didTapTaskProgressButton(task: TaskModel) {
+        presenter?.requestUpdateTaskStatus(task: task)
+        presenter?.requestTaskSearch(search: searchBar.text ?? "")
+        tasksTable.reloadData()
     }
 }

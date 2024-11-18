@@ -6,12 +6,7 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		E7593C542CEB46D700C6C986 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E7593C522CEB46D700C6C986 /* Localizable.stringsdict */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		E7593C532CEB46D700C6C986 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		E79872B42CE79D3200EED6CB /* ToDo List.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo List.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -51,7 +46,6 @@
 			isa = PBXGroup;
 			children = (
 				E79872B62CE79D3200EED6CB /* ToDo List */,
-				E7593C522CEB46D700C6C986 /* Localizable.stringsdict */,
 				E79872B52CE79D3200EED6CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -128,7 +122,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7593C542CEB46D700C6C986 /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,17 +136,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		E7593C522CEB46D700C6C986 /* Localizable.stringsdict */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E7593C532CEB46D700C6C986 /* en */,
-			);
-			name = Localizable.stringsdict;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		E79872C82CE79D3300EED6CB /* Debug */ = {

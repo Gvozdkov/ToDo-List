@@ -1,8 +1,13 @@
 import UIKit
 
+protocol ToDoCellDelegate: AnyObject {
+    func didTapTaskProgressButton(task: TaskModel)
+}
+
 final class ToDoCell: UITableViewCell {
     static let reuseIdentifier = "ToDoCellReuseIdentifier"
-    private var isCompleted: Bool = false
+    weak var delegate: ToDoCellDelegate?
+    private var task: TaskModel?
     
     private lazy var taskProgressButton: UIButton = {
         let button = UIButton()
@@ -65,6 +70,11 @@ final class ToDoCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        task = nil
+        taskTitleLabel.text = nil
+        taskTodoLabel.text = nil
+        dateOfCreationLabel.text = nil
+        task = nil
     }
     
     private func setupCellAppearance() {
@@ -108,8 +118,11 @@ final class ToDoCell: UITableViewCell {
     }
     
     private func updateTaskProgressButtonAppearance() {
-        isCompleted.toggle()
-        setTaskAppearance(isCompleted: isCompleted)
+        guard let task = task else { return }
+        setTaskAppearance(isCompleted: task.completed)
+        
+        let toggledCompletedTask = task.toggledCompleted()
+        delegate?.didTapTaskProgressButton(task: toggledCompletedTask)
     }
     
     private func setTaskAppearance(isCompleted: Bool) {
@@ -134,11 +147,11 @@ final class ToDoCell: UITableViewCell {
         updateTaskProgressButtonAppearance()
     }
     
-    func configureCell(with task: TaskModel) {
+    func configureCell(task: TaskModel) {
         taskTitleLabel.text = task.title
         taskTodoLabel.text = task.todo
         dateOfCreationLabel.text = task.dateOfCreation
-        isCompleted = task.completed
-        setTaskAppearance(isCompleted: isCompleted)
+        setTaskAppearance(isCompleted: task.completed)
+        self.task = task
     }
 }

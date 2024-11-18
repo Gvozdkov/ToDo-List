@@ -5,6 +5,7 @@ protocol ToDoListInteractorProtocol {
     func fetchSerchTasks() -> [TaskModel]
     func searchTask(search: String)
     func textCountTasks() -> String
+    func updateTaskStatus(task: TaskModel)
     func editTask()
     func shareTask()
     func deleteTask()
@@ -58,8 +59,17 @@ final class ToDoListInteractor: ToDoListInteractorProtocol {
     }
     
     func textCountTasks() -> String {
-        let tasksCount = allTasks.filter { !$0.completed }.count
-        return String.localizedStringWithFormat(NSLocalizedString("tasksСount", comment: ""), tasksCount)
+        let incompleteTasksCount = allTasks.filter { !$0.completed }.count
+        return String.localizedStringWithFormat(NSLocalizedString("tasksСount", comment: ""), incompleteTasksCount)
+    }
+    
+    func updateTaskStatus(task: TaskModel) {
+        for (index, todo) in allTasks.enumerated() {
+            if todo.id == task.id && todo.userId == task.userId {
+                allTasks[index] = task
+                break
+            }
+        }
     }
     
     func editTask() {
