@@ -59,7 +59,6 @@ final class ToDoListVC: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 11, weight: .regular)
         label.textColor = .whiteCustom
-        label.text = "7 задач"
         return label
     }()
     
@@ -131,6 +130,11 @@ final class ToDoListVC: UIViewController {
         ])
     }
     
+    private func updateTextNumberOfTasksLabel() {
+        let text = presenter?.requesTextCountTasks() ?? ""
+        numberOfTasksLabel.text = text
+    }
+    
     @objc private func addTaskButtonTapped() {
         router?.navigateToAddTask()
     }
@@ -150,6 +154,7 @@ extension ToDoListVC: UISearchBarDelegate {
 
 extension ToDoListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        updateTextNumberOfTasksLabel()
         return presenter?.getSerchTasks().count ?? 0
     }
     

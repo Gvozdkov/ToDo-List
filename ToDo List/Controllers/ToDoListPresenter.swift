@@ -4,6 +4,7 @@ protocol ToDoListPresenterProtocol {
     func getAllTasks()
     func getSerchTasks() -> [TaskModel]
     func requestTaskSearch(search: String)
+    func requesTextCountTasks() -> String
     func requestEditTask()
     func requestShareTask()
     func requestDeleteTask()
@@ -27,6 +28,10 @@ final class ToDoListPresenter: ToDoListPresenterProtocol {
     
     func requestTaskSearch(search: String) {
         return interactor.searchTask(search: search)
+    }
+    
+    func requesTextCountTasks() -> String {
+        return interactor.textCountTasks()
     }
     
     func requestEditTask() {
