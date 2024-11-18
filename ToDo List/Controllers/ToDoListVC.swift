@@ -17,6 +17,7 @@ final class ToDoListVC: UIViewController {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.backgroundImage = UIImage()
+        searchBar.delegate = self
 
         let textField = searchBar.searchTextField
         textField.textColor = .whiteCustom
@@ -73,15 +74,25 @@ final class ToDoListVC: UIViewController {
         return button
     }()
     
+    
+    private lazy var tapGesture: UITapGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(hideKeyboard))
+        return tapGesture
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         constraintsViewController()
         setupBackButton()
+        presenter?.getAllTasks()
         tasksTable.reloadData()
     }
     
     private func constraintsViewController() {
         view.backgroundColor = .blackCustom
+        
+        view.addGestureRecognizer(tapGesture)
         
         view.addSubview(tasksLabel)
         view.addSubview(searchBar)
@@ -123,16 +134,28 @@ final class ToDoListVC: UIViewController {
     @objc private func addTaskButtonTapped() {
         router?.navigateToAddTask()
     }
+    
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+extension ToDoListVC: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("Пользователь ввёл: \(searchText)")
+        presenter?.requestTaskSearch(search: searchText)
+        tasksTable.reloadData()
+    }
 }
 
 extension ToDoListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter?.getTasks().count ?? 0
+        return presenter?.getSerchTasks().count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.reuseIdentifier, for: indexPath) as? ToDoCell {
-            if let task = presenter?.getTasks()[indexPath.row] {
+            if let task = presenter?.getSerchTasks()[indexPath.row] {
                 cell.configureCell(with: task)
             }
             return cell
@@ -152,15 +175,15 @@ extension ToDoListVC: UITableViewDelegate {
             let deleteImage = UIImage(named: "trash")?.withTintColor(.redCustom)
             
             let editAction = UIAction(title: "Редактировать", image: editImage) { _ in
-                self.presenter?.editTask()
+                self.presenter?.requestEditTask()
             }
             
             let shareAction = UIAction(title: "Поделиться", image: shareImage) { _ in
-                self.presenter?.shareTask()
+                self.presenter?.requestShareTask()
             }
             
             let deleteAction = UIAction(title: "Удалить", image: deleteImage, attributes: .destructive) { _ in
-                self.presenter?.deleteTask()
+                self.presenter?.requestDeleteTask()
             }
             
             return UIMenu(title: "", children: [editAction, shareAction, deleteAction])

@@ -1,10 +1,13 @@
 import Foundation
 
 protocol ToDoListPresenterProtocol {
-    func getTasks() -> [TaskModel]
-    func editTask()
-    func shareTask()
-    func deleteTask()
+    func getAllTasks()
+    func getSerchTasks() -> [TaskModel]
+    func requestTaskSearch(search: String)
+    func requestEditTask()
+    func requestShareTask()
+    func requestDeleteTask()
+    
 }
 
 final class ToDoListPresenter: ToDoListPresenterProtocol {
@@ -14,20 +17,27 @@ final class ToDoListPresenter: ToDoListPresenterProtocol {
         self.interactor = interactor
     }
     
-    func getTasks() -> [TaskModel] {
-        return interactor.fetchTasks()
+    func getAllTasks() {
+        interactor.fetchAllTasks()
     }
     
-    func editTask() {
+    func getSerchTasks() -> [TaskModel] {
+        return interactor.fetchSerchTasks()
+    }
+    
+    func requestTaskSearch(search: String) {
+        return interactor.searchTask(search: search)
+    }
+    
+    func requestEditTask() {
         interactor.editTask()
     }
     
-    func shareTask() {
+    func requestShareTask() {
         interactor.shareTask()
     }
     
-    
-    func deleteTask() {
+    func requestDeleteTask() {
         interactor.deleteTask()
     }
 }
