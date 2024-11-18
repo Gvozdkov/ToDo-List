@@ -9,13 +9,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
     
         let todoListVC = ToDoListVC()
+        let interactor = ToDoListInteractor()
+        let presenter = ToDoListPresenter(interactor: interactor)
         let router = ToDoListRouter()
+        
         router.viewController = todoListVC
         todoListVC.router = router
+        todoListVC.presenter = presenter
         
         let navigationController = UINavigationController(rootViewController: todoListVC)
         
         window?.rootViewController = navigationController
+        window?.overrideUserInterfaceStyle = .light
         window?.makeKeyAndVisible()
         
         return true
