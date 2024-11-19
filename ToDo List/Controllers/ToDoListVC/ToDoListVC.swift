@@ -1,7 +1,7 @@
 import UIKit
 
 final class ToDoListVC: UIViewController {
-    var router: ToDoListRouterProtocol?
+    var router: ToDoRouterProtocol?
     var presenter: ToDoListPresenter?
     
     private lazy var tasksLabel: UILabel = {
@@ -72,7 +72,6 @@ final class ToDoListVC: UIViewController {
         button.addTarget(self, action: #selector(addTaskButtonTapped), for: .touchUpInside)
         return button
     }()
-    
     
     private lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()

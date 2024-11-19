@@ -1,6 +1,8 @@
 import UIKit
 
-final class AddTaskVC: UIViewController {    
+final class AddTaskVC: UIViewController {
+    var presenter: AddTaskPresenter?
+    
     private lazy var tasksNameTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +48,16 @@ final class AddTaskVC: UIViewController {
         super.viewDidLoad()
         constraintsViewController()
         tasksNameTextView.becomeFirstResponder()
+        let task = TaskModel(
+            id: 4,
+            title: "Почитать",
+            todo: "Почитать",
+            completed: false,
+            userId: 4,
+            dateOfCreation: "Почитать")
+        
+            presenter?.fetchSSaveTask(task: task)
+        print("AddTaskVC \(task)")
     }
     
     private func constraintsViewController() {
