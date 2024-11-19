@@ -24,7 +24,7 @@ final class AddTaskVC: UIViewController {
         return label
     }()
     
-    private lazy var weekdayStack: UIStackView = {
+    private lazy var taskDetailsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [tasksNameTextView, dateOfCreationLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -48,36 +48,31 @@ final class AddTaskVC: UIViewController {
         super.viewDidLoad()
         constraintsViewController()
         tasksNameTextView.becomeFirstResponder()
-        let task = TaskModel(
-            id: 4,
-            title: "Почитать",
-            todo: "Почитать",
-            completed: false,
-            userId: 4,
-            dateOfCreation: "Почитать")
-        
-            presenter?.fetchSSaveTask(task: task)
-        print("AddTaskVC \(task)")
+        updateDateLabel()
     }
     
     private func constraintsViewController() {
         view.backgroundColor = .blackCustom
        
-        view.addSubview(weekdayStack)
+        view.addSubview(taskDetailsStackView)
         view.addSubview(taskTextView)
         
         
         NSLayoutConstraint.activate([
-            weekdayStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            weekdayStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            weekdayStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            taskDetailsStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            taskDetailsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            taskDetailsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             tasksNameTextView.heightAnchor.constraint(equalToConstant: 45),
             
-            taskTextView.topAnchor.constraint(equalTo: weekdayStack.bottomAnchor, constant: 16),
+            taskTextView.topAnchor.constraint(equalTo: taskDetailsStackView.bottomAnchor, constant: 16),
             taskTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             taskTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             taskTextView.heightAnchor.constraint(equalToConstant: 400)
         ])
+    }
+    
+    private func updateDateLabel() {
+        dateOfCreationLabel.text = presenter?.fetchTaskDate()
     }
 }

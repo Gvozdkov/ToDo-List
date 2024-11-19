@@ -2,6 +2,7 @@ import Foundation
 
 protocol AddTaskPresenterProtocol {
     func fetchSSaveTask(task: TaskModel)
+    func fetchTaskDate() -> String
 }
 
 final class AddTaskPresenter: AddTaskPresenterProtocol {
@@ -13,6 +14,9 @@ final class AddTaskPresenter: AddTaskPresenterProtocol {
     
     func fetchSSaveTask(task: TaskModel) {
         interactor.saveTask(task: task)
-        print("AddTaskPresenter \(task)")
+    }
+    
+    func fetchTaskDate() -> String {
+        return interactor.getTaskDate()
     }
 }

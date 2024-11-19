@@ -2,6 +2,7 @@ import Foundation
 
 protocol AddTaskInteractorProtocol {
     func saveTask(task: TaskModel)
+    func getTaskDate() -> String
 }
 
 final class AddTaskInteractor: AddTaskInteractorProtocol {
@@ -15,4 +16,13 @@ final class AddTaskInteractor: AddTaskInteractorProtocol {
         taskService.addTask(task: task)
         print("AddTaskInteractor \(task)")
     }
+    
+    func getTaskDate() -> String {
+        let dateCurrent = Date.current()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yy"
+        let date = dateFormatter.string(from: dateCurrent)
+        return date
+    }
 }
+
