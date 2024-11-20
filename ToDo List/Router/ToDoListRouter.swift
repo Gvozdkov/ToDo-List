@@ -1,14 +1,19 @@
 import UIKit
 
-protocol ToDoListRouterProtocol: AnyObject {
+protocol ToDoRouterProtocol: AnyObject {
     func navigateToAddTask()
+    func navigateBack()
 }
 
-class ToDoListRouter: ToDoListRouterProtocol {
+class ToDoRouter: ToDoRouterProtocol {
     weak var viewController: UIViewController?
 
     func navigateToAddTask() {
-        let addTaskVC = AddTaskVC()
+        let addTaskVC = AddTaskModuleBuilder.build()
         viewController?.navigationController?.pushViewController(addTaskVC, animated: true)
+    }
+    
+    func navigateBack() {
+        viewController?.navigationController?.popViewController(animated: true)
     }
 }

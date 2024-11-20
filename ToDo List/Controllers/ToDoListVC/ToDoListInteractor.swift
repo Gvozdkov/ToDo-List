@@ -1,5 +1,4 @@
 import Foundation
-
 protocol ToDoListInteractorProtocol {
     func fetchAllTasks()
     func fetchSerchTasks() -> [TaskModel]
@@ -12,27 +11,16 @@ protocol ToDoListInteractorProtocol {
 }
 
 final class ToDoListInteractor: ToDoListInteractorProtocol {
-    private var allTasks: [TaskModel] = [
-        TaskModel(
-            id: 1,
-            title: "Почитать книгу",
-            todo: "Составить список необходимых продуктов для ужина. Не забыть проверить, что уже есть в холодильнике.",
-            completed: false,
-            userId: 1,
-            dateOfCreation: "15/11/24"),
-        TaskModel(
-            id: 2,
-            title: "Уборка в квартире",
-            todo: "Провести генеральную уборку в квартире",
-            completed: true,
-            userId: 2,
-            dateOfCreation: nil),
-    ]
+    private let taskService: TaskServiceProtocol
     
+    init(taskService: TaskServiceProtocol) {
+        self.taskService = taskService
+   
+    }
     private var serchTasks = [TaskModel]()
     
     func fetchAllTasks() {
-        serchTasks = allTasks
+        serchTasks = taskService.allTasks
     }
     
     func fetchSerchTasks() -> [TaskModel] {
@@ -43,11 +31,11 @@ final class ToDoListInteractor: ToDoListInteractorProtocol {
         serchTasks.removeAll()
         
         if search.isEmpty {
-            serchTasks = allTasks
+            serchTasks = taskService.allTasks
             return
         }
 
-        for searchTask in allTasks {
+        for searchTask in taskService.allTasks {
             if let title = searchTask.title?.lowercased(), title.contains(search.lowercased()) ||
                searchTask.todo.lowercased().contains(search.lowercased()) {
                 
@@ -59,17 +47,12 @@ final class ToDoListInteractor: ToDoListInteractorProtocol {
     }
     
     func textCountTasks() -> String {
-        let incompleteTasksCount = allTasks.filter { !$0.completed }.count
+        let incompleteTasksCount = taskService.allTasks.filter { !$0.completed }.count
         return String.localizedStringWithFormat(NSLocalizedString("tasksСount", comment: ""), incompleteTasksCount)
     }
     
     func updateTaskStatus(task: TaskModel) {
-        for (index, todo) in allTasks.enumerated() {
-            if todo.id == task.id && todo.userId == task.userId {
-                allTasks[index] = task
-                break
-            }
-        }
+        taskService.updateTask(task: task)
     }
     
     func editTask() {
