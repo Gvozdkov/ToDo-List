@@ -2,11 +2,15 @@ import UIKit
 
 class AddTaskModuleBuilder {
     static func build() -> UIViewController {
-        let taskService = TaskService.shared
-        let addTaskInteractor = AddTaskInteractor(taskService: taskService)
-        let addTaskPresenter = AddTaskPresenter(interactor: addTaskInteractor)
         let addTaskVC = AddTaskVC()
-        addTaskVC.presenter = addTaskPresenter
+        let taskService = TaskService.shared
+        let interactor = AddTaskInteractor(taskService: taskService)
+        let presenter = AddTaskPresenter(interactor: interactor)
+        let router = ToDoRouter()
+        
+        router.viewController = addTaskVC
+        addTaskVC.router = router
+        addTaskVC.presenter = presenter
         
         return addTaskVC
     }

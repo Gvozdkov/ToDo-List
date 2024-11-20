@@ -1,6 +1,7 @@
 import UIKit
 
 final class AddTaskVC: UIViewController {
+    var router: ToDoRouterProtocol?
     var presenter: AddTaskPresenter?
     
     private lazy var tasksNameTextView: UITextView = {
@@ -12,6 +13,7 @@ final class AddTaskVC: UIViewController {
         textView.textColor = .whiteCustom
         textView.backgroundColor = .blackCustom
         textView.keyboardAppearance = .dark
+        textView.delegate = self
         return textView
     }()
     
@@ -21,6 +23,7 @@ final class AddTaskVC: UIViewController {
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .whiteCustom
         label.alpha = 0.5
+        label.isHidden = true
         return label
     }()
     
@@ -41,6 +44,7 @@ final class AddTaskVC: UIViewController {
         textView.textColor = .whiteCustom
         textView.backgroundColor = .blackCustom
         textView.keyboardAppearance = .dark
+        textView.delegate = self
         return textView
     }()
     
@@ -74,5 +78,29 @@ final class AddTaskVC: UIViewController {
     
     private func updateDateLabel() {
         dateOfCreationLabel.text = presenter?.fetchTaskDate()
+    }
+}
+
+extension AddTaskVC: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText = textView.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            dateOfCreationLabel.isHidden = true
+        } else {
+            dateOfCreationLabel.isHidden = false
+        }
+        
+        if text == "\n" {
+            if textView == tasksNameTextView {
+                taskTextView.becomeFirstResponder()
+            } else if textView == taskTextView {
+                textView.resignFirstResponder()
+                router?.navigateBack()
+            }
+            return false
+        }
+        return true
     }
 }
