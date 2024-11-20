@@ -9,8 +9,8 @@ class ToDoRouter: ToDoRouterProtocol {
     weak var viewController: UIViewController?
 
     func navigateToAddTask() {
-        let addTaskVC = AddTaskModuleBuilder.build()
-        viewController?.navigationController?.pushViewController(addTaskVC, animated: true)
+        let addTaskVC = AddTaskModuleBuilder.build(delegate: viewController as? AddTaskDelegate)
+              viewController?.navigationController?.pushViewController(addTaskVC, animated: true)
     }
     
     func navigateBack() {

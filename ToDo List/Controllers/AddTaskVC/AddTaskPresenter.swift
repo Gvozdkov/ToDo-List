@@ -1,7 +1,8 @@
 import Foundation
 
 protocol AddTaskPresenterProtocol {
-    func fetchSSaveTask(task: TaskModel)
+    func fetchСreateNewTask(title: String, todo: String) -> TaskModel
+    func fetchSaveTask(task: TaskModel)
     func fetchTaskDate() -> String
 }
 
@@ -11,8 +12,12 @@ final class AddTaskPresenter: AddTaskPresenterProtocol {
     init(interactor: AddTaskInteractor) {
         self.interactor = interactor
     }
+
+    func fetchСreateNewTask(title: String, todo: String) -> TaskModel {
+        return interactor.createNewTask(title: title, todo: todo)
+    }
     
-    func fetchSSaveTask(task: TaskModel) {
+    func fetchSaveTask(task: TaskModel) {
         interactor.saveTask(task: task)
     }
     

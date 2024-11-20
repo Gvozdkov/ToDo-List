@@ -135,7 +135,9 @@ final class ToDoListVC: UIViewController {
     }
     
     @objc private func addTaskButtonTapped() {
-        router?.navigateToAddTask()
+        if let addTaskVC = router?.navigateToAddTask() as? AddTaskVC {
+            addTaskVC.delegate = self
+        }
     }
     
     @objc private func hideKeyboard() {
@@ -199,6 +201,13 @@ extension ToDoListVC: ToDoCellDelegate {
     func didTapTaskProgressButton(task: TaskModel) {
         presenter?.requestUpdateTaskStatus(task: task)
         presenter?.requestTaskSearch(search: searchBar.text ?? "")
+        tasksTable.reloadData()
+    }
+}
+
+extension ToDoListVC: AddTaskDelegate {
+    func didAddNewTask() {
+        presenter?.getAllTasks()
         tasksTable.reloadData()
     }
 }

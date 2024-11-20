@@ -1,6 +1,12 @@
 import UIKit
 
+protocol AddTaskDelegate: AnyObject {
+    func didAddNewTask()
+}
+
 final class AddTaskVC: UIViewController {
+    weak var delegate: AddTaskDelegate?
+    
     var router: ToDoRouterProtocol?
     var presenter: AddTaskPresenter?
     
@@ -97,6 +103,10 @@ extension AddTaskVC: UITextViewDelegate {
                 taskTextView.becomeFirstResponder()
             } else if textView == taskTextView {
                 textView.resignFirstResponder()
+                if let newTask = presenter?.fetchСreateNewTask(title: tasksNameTextView.text, todo: taskTextView.text) {
+                    presenter?.fetchSaveTask(task: newTask)
+                    delegate?.didAddNewTask()
+                }
                 router?.navigateBack()
             }
             return false

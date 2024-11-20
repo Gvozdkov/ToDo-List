@@ -1,7 +1,7 @@
 import UIKit
 
 class AddTaskModuleBuilder {
-    static func build() -> UIViewController {
+    static func build(delegate: AddTaskDelegate?) -> UIViewController {
         let addTaskVC = AddTaskVC()
         let taskService = TaskService.shared
         let interactor = AddTaskInteractor(taskService: taskService)
@@ -11,6 +11,7 @@ class AddTaskModuleBuilder {
         router.viewController = addTaskVC
         addTaskVC.router = router
         addTaskVC.presenter = presenter
+        addTaskVC.delegate = delegate
         
         return addTaskVC
     }
